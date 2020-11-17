@@ -174,7 +174,6 @@ dependencies:
   - python-dateutil=2.7.3=py36_0
   - pytz=2018.4=py36_0
   - pywavelets=0.5.2=py36he602eb0_0
-  - pyyaml=3.12=py36hafb9ca4_1
   - pyzmq=17.0.0=py36h14c3975_0
   - qt=5.9.5=h7e424d6_0
   - qtawesome=0.4.4=py36h609ed8c_0
