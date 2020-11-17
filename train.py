@@ -27,7 +27,7 @@ import time
 import glob
 import numpy as np
 import libs.omninet as omninet
-from libs.utils import dataloaders as dl
+from libs.util import dataloaders as dl
 from tensorboardX import SummaryWriter
 import torch.multiprocessing as mp
 import torch.nn as nn
@@ -38,7 +38,7 @@ from torch.optim.adam import Adam
 import random
 import sys
 from tqdm import tqdm
-from libs.utils.train_util import *
+from libs.util.train_util import *
 
 
 coco_images = 'data/coco/train_val'

@@ -42,12 +42,12 @@ from nltk.tokenize import word_tokenize
 import sys
 from tqdm import tqdm
 from PIL import Image
-from libs.utils.train_util import *
-from libs.utils.cocoapi.coco import COCO
-from libs.utils.vqa.vqa import VQA
-from libs.utils.vqa.vqaEval import VQAEval
-from libs.utils.cocoapi.eval import COCOEvalCap
-from torch.utils.data import Dataset, DataLoader
+from libs.util.train_util import *
+from libs.util.cocoapi.coco import COCO
+from libs.util.vqa.vqa import VQA
+from libs.util.vqa.vqaEval import VQAEval
+from libs.util.cocoapi.eval import COCOEvalCap
+from torch.util.data import Dataset, DataLoader
 from torchvision import transforms
 from libs.utils.bleu import compute_bleu
 
