@@ -130,8 +130,8 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
         video=video.to(0)
         model.encode_videos(video)
 
-    if verbose==False:
-        sys.stdout = sys.__stdout__
+    # if cfg.OMNINET.VERBOSE == False:
+    #     sys.stdout = sys.__stdout__
 
     result = ""
     if task=='caption':
