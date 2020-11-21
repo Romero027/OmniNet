@@ -42,9 +42,9 @@ def get_tensor_size(t):
 
 def extract_frames_from_video(video_file, EXTRACT_FREQUENCY=4, video_resize_height=300,
                               video_resize_width=300, crop_size=224, clip_len=16):
-    EXTRACT_FREQUENCY = 1
-
     capture=cv2.VideoCapture(video_file)
+    fps = capture.get(cv2.CAP_PROP_FPS)
+    print(f"Video fps is {fps}")
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -112,6 +112,7 @@ def extract_pixels_from_image(image):
 
 
 def vision_and_language_prediction(cfg, task, image=None, text=None, video=None):
+
     model_file=cfg.OMNINET.MODEL
     verbose=cfg.OMNINET.VERBOSE
     penn_vocab_file = os.path.join(cfg.OMNINET.BASE, 'conf/penn_vocab.json')
@@ -140,13 +141,15 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
 
 
     if text is not None:
+        text_start = time.time()
         model.encode_englishtexts([text])
+        print(f'Encode text took {time.time() - text_start}')
 
     if video is not None:
         video=extract_frames_from_video(video, cfg.OMNINET.EXTRACT_FREQUENCY, cfg.OMNINET.VIDEO_RESIZE_HEIGHT,
                                         cfg.OMNINET.VIDEO_RESIZE_WIDTH, cfg.OMNINET.CROP_SIZE, cfg.OMNINET.CLIP_LEN)
         print(f'Video encoding input tensor shape is {video.size()}')
-        print(f'Video encoding input tensor in MB is {get_tensor_size(video):.3f}')
+        print(f'Video encoding input tensor size is {get_tensor_size(video):.3f}')
         video=video.to(0)
 
         video_start = time.time()
