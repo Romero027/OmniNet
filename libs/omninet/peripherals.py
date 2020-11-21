@@ -63,7 +63,8 @@ class ImageInputPeripheral(base_peripheral):
         shape=image_tensor.shape
         if len(shape)==5:
             t_dim=image_tensor.shape[1]
-            image_tensor=torch.reshape(image_tensor,(-1,3,shape[3],shape[4]))    
+            image_tensor=torch.reshape(image_tensor,(-1,3,shape[3],shape[4]))
+            print(f'Video tensor after reshape: {image_tensor.size()}')
         batch_size=image_tensor.shape[0]
         image_enc=self.image_model(image_tensor)
         enc_reshape=torch.reshape(image_enc,[batch_size,self.feature_dim,-1])

@@ -31,6 +31,9 @@ import torch
 from torch.autograd import Variable
 
 
+def get_tensor_size(t):
+    return t.element_size() * t.nelement() / (1024 ** 2.)
+
 def recursiveTrace(obj):
   print(type(obj))
   if hasattr(obj, 'grad_fn'):

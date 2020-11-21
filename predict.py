@@ -29,19 +29,26 @@ import torch
 import numpy as np
 import libs.omninet as omninet
 import sys, os
+import time
 import warnings
 warnings.filterwarnings("ignore")
 
 from PIL import Image
 from torchvision import transforms
 
+# Get pytorch tensor size in mb
+def get_tensor_size(t):
+    return t.element_size() * t.nelement() / (1024 ** 2.)
 
-def extract_frames_from_video(video_file, EXTRACT_FREQUENCY =4, video_resize_height=300,
+def extract_frames_from_video(video_file, EXTRACT_FREQUENCY=4, video_resize_height=300,
                               video_resize_width=300, crop_size=224, clip_len=16):
+    EXTRACT_FREQUENCY = 1
+
     capture=cv2.VideoCapture(video_file)
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
     if frame_count // EXTRACT_FREQUENCY <= 16:
         EXTRACT_FREQUENCY -= 1
         if frame_count // EXTRACT_FREQUENCY <= 16:
@@ -65,7 +72,10 @@ def extract_frames_from_video(video_file, EXTRACT_FREQUENCY =4, video_resize_hei
         count += 1
     capture.release()
 
+    total_frame_count = frame_count
     frame_count = len(frames)
+    print(f'Total frame count is {total_frame_count} and {frame_count} is selected')
+
     buffer = np.empty((frame_count, video_resize_height, video_resize_width, 3), np.dtype('float32'))
     for i, frame in enumerate(frames):
         buffer[i] = np.array(frame)
@@ -120,25 +130,41 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
 
     if image is not None:
         image=extract_pixels_from_image(image)
+        print(f'Image tensor shape is {image.size()}')
+        print(f'Image tensor in MB is {get_tensor_size(image):.2f}')
         image=image.to(0)
+
+        image_start = time.time()
         model.encode_images(image)
+        print(f'Encode image took {time.time() - image_start}')
+
+
     if text is not None:
         model.encode_englishtexts([text])
+
     if video is not None:
         video=extract_frames_from_video(video, cfg.OMNINET.EXTRACT_FREQUENCY, cfg.OMNINET.VIDEO_RESIZE_HEIGHT,
                                         cfg.OMNINET.VIDEO_RESIZE_WIDTH, cfg.OMNINET.CROP_SIZE, cfg.OMNINET.CLIP_LEN)
+        print(f'Video tensor shape is {video.size()}')
+        print(f'Video tensor in MB is {get_tensor_size(video):.2f}')
         video=video.to(0)
-        model.encode_videos(video)
 
-    if cfg.OMNINET.VERBOSE == False:
-        sys.stdout = sys.__stdout__
+        video_start = time.time()
+        model.encode_videos(video)
+        print(f'Encode videos took {time.time() - video_start}')
+
+    if verbose == False:
+        sys.setdout = sys.__stdout__
+
 
     result = ""
+    start = time.time()
     if task=='caption':
         prediction=model.decode_greedy('IMAGE_CAPTION',num_steps=100)
         prediction = prediction.argmax(-1)
         prediction = model.english_language_perph.decode_tokens(prediction)
         result += f'Caption Prediction: {prediction[0]}'
+
     elif task=='hmdb':
         prediction = model.decode_greedy('HMDB', num_steps=1)
         prediction = prediction.argmax(-1).cpu().tolist()[0][0]
@@ -171,7 +197,7 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
         for p in prediction:
             penn_text='%s %s'%(penn_text,id_to_tag[str(p)])
             result += f'POS tagging Prediction: {penn_text}'
-
+    print(f'inference took {time.time() - start}')
     return result
 
 
