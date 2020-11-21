@@ -44,10 +44,11 @@ def extract_frames_from_video(video_file, EXTRACT_FREQUENCY=4, video_resize_heig
                               video_resize_width=300, crop_size=224, clip_len=16):
     capture=cv2.VideoCapture(video_file)
     fps = capture.get(cv2.CAP_PROP_FPS)
-    print(f"Video fps is {fps}")
+
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    print(f"Video fps is {fps}, frame width is {frame_width}, frame height is {frame_height}")
 
     if frame_count // EXTRACT_FREQUENCY <= 16:
         EXTRACT_FREQUENCY -= 1
