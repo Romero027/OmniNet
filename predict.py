@@ -130,8 +130,8 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
 
     if image is not None:
         image=extract_pixels_from_image(image)
-        print(f'Image tensor shape is {image.size()}')
-        print(f'Image tensor in MB is {get_tensor_size(image):.2f}')
+        print(f'Image encoding input tensor shape is {image.size()}')
+        print(f'Image encoding input tensor size is {get_tensor_size(image_encodings):.3f}')
         image=image.to(0)
 
         image_start = time.time()
@@ -145,8 +145,8 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
     if video is not None:
         video=extract_frames_from_video(video, cfg.OMNINET.EXTRACT_FREQUENCY, cfg.OMNINET.VIDEO_RESIZE_HEIGHT,
                                         cfg.OMNINET.VIDEO_RESIZE_WIDTH, cfg.OMNINET.CROP_SIZE, cfg.OMNINET.CLIP_LEN)
-        print(f'Video tensor shape is {video.size()}')
-        print(f'Video tensor in MB is {get_tensor_size(video):.2f}')
+        print(f'Video encoding input tensor shape is {video.size()}')
+        print(f'Video encoding input tensor in MB is {get_tensor_size(video):.3f}')
         video=video.to(0)
 
         video_start = time.time()

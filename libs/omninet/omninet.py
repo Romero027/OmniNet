@@ -62,19 +62,19 @@ class OmniNet(nn.Module):
     def encode_videos(self,videos,domain='IMAGE'):
         video_encodings = self.image_input_perph.encode(videos)
         print(f'Video encoding output tensor shape is {video_encodings.size()}')
-        print(f'Video encoding output tensor size is {get_tensor_size(video_encodings):.2f}')
+        print(f'Video encoding output tensor size is {get_tensor_size(video_encodings):.3f}')
         self.cnp.encode(video_encodings,domain=domain)
 
     def encode_images(self,images,domain='IMAGE'):
         image_encodings = self.image_input_perph.encode(images)
         print(f'Image encoding output tensor shape is {image_encodings.size()}')
-        print(f'Image encoding output tensor size is {get_tensor_size(image_encodings):.2f}')
+        print(f'Image encoding output tensor size is {get_tensor_size(image_encodings):.3f}')
         self.cnp.encode(image_encodings,domain=domain)
     
     def encode_englishtexts(self,texts,domain='ENGLISH'):
         sent_encodings,input_pad_mask=self.english_language_perph.embed_sentences(texts)
         print(f'Text encoding output tensor shape is {sent_encodings.size()}')
-        print(f'Text encoding output tensor size is {get_tensor_size(sent_encodings):.2f}')
+        print(f'Text encoding output tensor size is {get_tensor_size(sent_encodings):.3f}')
         self.cnp.encode(sent_encodings, pad_mask=input_pad_mask, domain=domain)
     
     def decode_from_targets(self,task,targets,target_pad_mask=None):
