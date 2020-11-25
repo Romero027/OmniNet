@@ -84,9 +84,12 @@ def extract_frames_from_video(video_file, EXTRACT_FREQUENCY=4, video_resize_heig
     height_index=0
     width_index=0
 
-    buffer = buffer[time_index:time_index + clip_len,
-                height_index:height_index + crop_size,
-                width_index:width_index + crop_size, :]
+    # buffer = buffer[time_index:time_index + clip_len,
+    #             height_index:height_index + crop_size,
+    #             width_index:width_index + crop_size, :]
+
+    # buffer = buffer[time_index:time_index + clip_len, :, :, :]
+
     #Normalize
     buffer=buffer/255
     for i, frame in enumerate(buffer):
@@ -120,8 +123,8 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
     vqa_vocab_file = os.path.join(cfg.OMNINET.BASE, 'conf/vqa_vocab.pkl')
     hmdb_labels_file = os.path.join(cfg.OMNINET.BASE, 'conf/hmdblabels.txt')
 
-    if verbose==False:
-        sys.stdout = open(os.devnull, 'w')
+    # if verbose==False:
+    #     sys.stdout = open(os.devnull, 'w')
 
     #Load Omninet model
     model = omninet.OmniNet(gpu_id=0)
@@ -138,27 +141,27 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
 
         image_start = time.time()
         model.encode_images(image)
-        print(f'Encode image took {time.time() - image_start}')
+        print(f'Encode image took {time.time() - image_start:.2f}')
 
 
     if text is not None:
         text_start = time.time()
         model.encode_englishtexts([text])
-        print(f'Encode text took {time.time() - text_start}')
+        print(f'Encode text took {time.time() - text_start:.2f}')
 
     if video is not None:
         video=extract_frames_from_video(video, cfg.OMNINET.EXTRACT_FREQUENCY, cfg.OMNINET.VIDEO_RESIZE_HEIGHT,
                                         cfg.OMNINET.VIDEO_RESIZE_WIDTH, cfg.OMNINET.CROP_SIZE, cfg.OMNINET.CLIP_LEN)
-        print(f'Video encoding input tensor shape is {video.size()}')
+        # print(f'Video encoding input tensor shape is {video.size()}')
         print(f'Video encoding input tensor size is {get_tensor_size(video):.3f}')
         video=video.to(0)
 
         video_start = time.time()
         model.encode_videos(video)
-        print(f'Encode videos took {time.time() - video_start}')
+        print(f'Encode videos took {time.time() - video_start:.2f}')
 
-    if verbose == False:
-        sys.setdout = sys.__stdout__
+    # if verbose == False:
+    #     sys.setdout = sys.__stdout__
 
 
     result = ""
@@ -201,7 +204,8 @@ def vision_and_language_prediction(cfg, task, image=None, text=None, video=None)
         for p in prediction:
             penn_text='%s %s'%(penn_text,id_to_tag[str(p)])
             result += f'POS tagging Prediction: {penn_text}'
-    print(f'inference took {time.time() - start}')
+    print(f'{task} inference took {time.time() - start:.2f}')
+
     return result
 
 

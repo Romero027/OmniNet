@@ -61,7 +61,7 @@ class OmniNet(nn.Module):
 
     def encode_videos(self,videos,domain='IMAGE'):
         video_encodings = self.image_input_perph.encode(videos)
-        print(f'Video encoding output tensor shape is {video_encodings.size()}')
+        # print(f'Video encoding output tensor shape is {video_encodings.size()}')
         print(f'Video encoding output tensor size is {get_tensor_size(video_encodings):.3f}')
         self.cnp.encode(video_encodings,domain=domain)
 
