@@ -75,7 +75,7 @@ def extract_frames_from_video(video_file, EXTRACT_FREQUENCY=4, video_resize_heig
 
     total_frame_count = frame_count
     frame_count = len(frames)
-    print(f'Total frame count is {# total_frame_count} and {frame_count} is selected')
+    # print(f'Total frame count is {total_frame_count} and {frame_count} is selected')
 
     buffer = np.empty((frame_count, video_resize_height, video_resize_width, 3), np.dtype('float32'))
     for i, frame in enumerate(frames):
